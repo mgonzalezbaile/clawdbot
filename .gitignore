@@ -70,6 +70,8 @@ USER.md
 
 # local tooling
 .serena/
+.claude/
+.claudex/
 
 # Agent credentials and memory (NEVER COMMIT)
 memory/
