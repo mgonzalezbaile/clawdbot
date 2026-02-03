@@ -1,6 +1,6 @@
 ---
 name: job-application-assistant
-description: Given a job post URL, extracts application questions and drafts answers based on professional profile.
+description: Given a job post URL, extracts application questions and drafts answers based on professional profile. Also handles post-application recruiter outreach via the job_seeker contactRecruiters script (LinkedIn company slug + personalized message).
 metadata: {"moltbot":{"emoji":"💼"}}
 ---
 

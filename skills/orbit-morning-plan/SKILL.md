@@ -25,6 +25,24 @@ You are generating Orbit's **Morning Daily Plan**, a structured daily plan that 
 - Automatic morning greeting (scheduled via heartbeat)
 - Start of user's working day
 
+## Default Daily Structure (Feb 2026)
+
+When generating plans, respect these fixed time blocks:
+
+| Time Block | Focus | Projects |
+|------------|-------|----------|
+| Morning → 14:00 | **NUA** | Wife's beauty coworking AI agent |
+| 14:00 → 15:00 | Lunch | — |
+| 15:00 → 19:30 | **Fever** | AI adoption for 400+ engineers (contractor) |
+| 22:00 → 23:30 | **Job Hunting** | Keep warm during Fever contract |
+
+**Context:**
+- Fever is a 3-4 month contract (Feb – ~May/Jun 2026)
+- Job Hunting stays active but in evening slot only
+- NUA is urgent (wife needs it ASAP)
+
+Assign tasks to appropriate time blocks based on their project. If a task doesn't fit these projects, slot it into available gaps or flag it.
+
 ## Process Steps
 
 Execute the following steps in order to generate the daily plan:
@@ -181,22 +199,42 @@ Would you prefer to:
 What do you think?
 ```
 
-## Step 7: Post-Approval Actions
+## Step 7: Post-Approval Actions (MANDATORY)
 
-Once the user approves the final plan:
+Once the user approves the final plan, **immediately execute these steps**:
 
-1. **Update task statuses:**
+1. **Write the plan file (REQUIRED):**
+   - Path: `memory/daily/YYYY-MM-DD.md` (e.g., `memory/daily/2026-02-03.md`)
+   - Include: approved time, status, fixed events, priority sequence, and notes
+   - This file is checked by hourly crons — if missing, crons assume no plan exists
+
+2. **Update task statuses:**
    - Set selected tasks to `status: Planned`
    - Leave unselected Ready tasks as `status: Ready`
 
-2. **Store the plan:**
-   - Save the full plan to `memory/daily/{YYYY-MM-DD}.md`
-   - Include: ordered sequence, reasoning, resume contexts, and timestamp
-
 3. **Confirm to user:**
    ```
-   Plan saved. I'll monitor progress and check in during the day.
+   Plan locked ✅ Saved to memory/daily/YYYY-MM-DD.md
    ```
+
+**Template for plan file:**
+```markdown
+# Daily Plan — {date}
+
+**Approved:** {time}
+**Status:** In Progress
+
+## Fixed Events
+- {time} — {event}
+
+## Priority Sequence
+### {Time Block} — {Project}
+1. **{Task}** — {priority}
+   - Status: {Not Started|In Progress|Done}
+
+## Notes
+- {relevant context}
+```
 
 ## Reasoning Transparency Rules
 

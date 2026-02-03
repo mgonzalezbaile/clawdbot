@@ -58,6 +58,45 @@ Check the snapshot for:
 
 If not logged in → LinkedIn shows login wall. Report and stop.
 
+### Step 2.5: Scroll to Load All Job Cards
+
+**Critical:** LinkedIn lazy-loads job cards. Only ~7 are visible initially; the rest load as you scroll the left panel. You **must** scroll the job list to the bottom before parsing.
+
+```javascript
+// Scroll the job list container to load all cards
+browser act: evaluate
+() => {
+  const list = document.querySelector('.scaffold-layout__list > div');
+  if (list) {
+    list.scrollTop = list.scrollHeight;
+    return 'scrolled to ' + list.scrollHeight;
+  }
+  return 'no list found';
+}
+```
+
+Wait 2-3 seconds, then scroll again (new items increase scrollHeight). Repeat until the count stabilizes:
+
+```javascript
+// Check how many job cards loaded
+() => {
+  const items = document.querySelectorAll('li.ember-view');
+  let count = 0;
+  for (const li of items) {
+    if (li.querySelector('a[href*="/jobs/view/"]')) count++;
+  }
+  const list = document.querySelector('.scaffold-layout__list > div');
+  if (list) list.scrollTop = list.scrollHeight;
+  return JSON.stringify({count, height: list?.scrollHeight});
+}
+```
+
+Repeat scroll + wait (2-3s) + count until count stops increasing (typically 15-25 per page). Only then proceed to parsing.
+
+**Do this on every page** before extracting job data.
+
+---
+
 ### Step 3: Parse Job Listings
 
 LinkedIn shows jobs in a left sidebar list. Each job card contains:
@@ -99,7 +138,7 @@ From each job card, extract:
 Jobs passing all filters (title + remote + AI-relevant) are automatically added to Notion.
 
 **Notion Database:** Job Hunting Pipeline
-- database_id: `eaedf5e6-3b8e-4454-bbcf-00f5a72abf23`
+- database_id: `2b9ff60b-2f4d-8129-8b4c-ce71ced464a6`
 
 ### Add to Notion
 
@@ -112,7 +151,7 @@ curl -s -X POST "https://api.notion.com/v1/pages" \
   -H "Notion-Version: 2025-09-03" \
   -H "Content-Type: application/json" \
   -d '{
-    "parent": {"database_id": "eaedf5e6-3b8e-4454-bbcf-00f5a72abf23"},
+    "parent": {"database_id": "2b9ff60b-2f4d-8129-8b4c-ce71ced464a6"},
     "properties": {
       "Role": {"title": [{"text": {"content": "<ROLE>"}}]},
       "Company": {"rich_text": [{"text": {"content": "<COMPANY>"}}]},
@@ -124,44 +163,33 @@ curl -s -X POST "https://api.notion.com/v1/pages" \
   }'
 ```
 
-**Fit Assessment:**
-- **Strong**: CTO/VP/Head role + explicit AI/ML in job description + funded company
-- **Good**: EM role at AI company OR leadership role with AI mentioned
-- **Weak**: AI mentioned but not core to role
+**Fit Assessment** (see `/Users/maikel/Library/CloudStorage/GoogleDrive-m.gonzalezbaile@gmail.com/My Drive/Work/Job Hunting/job-criteria.md` for full criteria):
+- **Strong**: Right role + strong company + AI/ML focus or clear growth path
+- **Good**: Right role + solid company, even without explicit AI focus
+- **Weak**: Stretch role or uncertain company quality
 
-**Summary field:** Brief note on why it's AI-relevant (e.g., "Voice AI platform, LLM integration")
+**Summary field:** Brief note on why it's a fit (company strength, AI relevance, role scope, growth potential)
 
 ---
 
 ## Filtering Rules
 
-The URL already filters for roles + remote + EU. Apply these additional rules:
+> **Source of truth:** All role, location, company stage, and domain criteria live in `/Users/maikel/Library/CloudStorage/GoogleDrive-m.gonzalezbaile@gmail.com/My Drive/Work/Job Hunting/job-criteria.md`. Read it before every run. The rules below are LinkedIn-specific execution details only.
 
-**Hard Skip (don't add to Notion):**
-- ❌ IC roles (Senior Engineer, Staff Engineer, Principal Engineer) — leadership only
-- ❌ Data-focused roles (Data Eng Manager, Analytics Lead) — want product/customer-facing
-- ❌ Language requirements (Italian, German, French required, etc.)
-- ❌ Blockchain/Crypto focus (not expertise area)
+The URL already filters for roles + remote + EU. Apply these additional LinkedIn-specific rules:
+
+**Hard Skip (LinkedIn-specific):**
 - ❌ "Over 200 applicants" + posted >1 week — low signal-to-noise
-- ❌ **No AI/ML mention in job description** — must be AI-relevant
-
-**AI/ML Relevance Check (REQUIRED):**
-After initial title filter, click into job detail and scan description for:
-- Keywords: AI, artificial intelligence, ML, machine learning, LLM, large language model, NLP, GPT, deep learning, neural network, generative AI, GenAI, computer vision, data science (in product context)
-- Context: Building AI products, AI strategy, ML infrastructure, AI-native company
-
-If NONE of these appear in the job description → **Skip** (not AI-relevant)
 
 **Needs deeper review (flag but include):**
 - ⚠️ Promoted/Sponsored listings — often recruiter postings, verify company
 - ⚠️ Reposted jobs — may indicate difficulty filling (red flag) or updated posting (neutral)
 - ⚠️ "Actively recruiting" — could be high volume, check company size
 
-**Prioritize (Strong fit):**
+**Prioritize:**
 - ✅ Posted within last 7 days
 - ✅ <50 applicants (lower competition)
 - ✅ Easy Apply available (faster process)
-- ✅ AI/ML companies or AI-native products (check company)
 - ✅ Series A+ or 50+ employees
 - ✅ Clear salary range listed (rare on LinkedIn, but valuable)
 

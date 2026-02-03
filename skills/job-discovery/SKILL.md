@@ -12,42 +12,7 @@ Proactively search job platforms for roles matching profile and expectations, de
 
 ## Search Criteria
 
-**Target Roles:**
-- CTO
-- VP of Engineering
-- Head of Engineering
-- Director of Engineering
-- Head of AI / AI Lead (with leadership scope)
-- Fractional/Advisory CTO (if AI-focused)
-
-**Hard Requirements:**
-- ✅ Full remote (European timezone compatible)
-- ❌ No hybrid
-- ❌ No on-site
-
-**Hard Skip:**
-- ❌ IC roles (Senior/Staff Engineer) — leadership only
-- ❌ Data-focused roles (Data Eng Manager, Analytics Lead) — want product/customer-facing
-- ❌ Language requirements (Italian, German, French, etc.)
-- ❌ Blockchain/Crypto focus (not expertise area)
-- ❌ Revenue-sharing consulting arrangements
-
-**Equity-Only Rules:**
-- Only if founders have **proven exits**
-- AND salary expected within **≤2 months**
-- Otherwise → Skip
-
-**Preferred:**
-- European companies/startups/scaleups
-- Series A+ (funded), 50+ employees
-- Product-focused, customer-facing scope
-- AI/ML companies or AI-native products
-
-**Tech/Domain Fit:**
-- AI/ML companies or AI-native products
-- Developer tools / platforms
-- Health-tech, fintech (has experience)
-- B2B SaaS
+> **Source of truth:** All search criteria live in `/Users/maikel/Library/CloudStorage/GoogleDrive-m.gonzalezbaile@gmail.com/My Drive/Work/Job Hunting/job-criteria.md`. Read it before every run. Do NOT duplicate criteria here — defer to that file for roles, location, company stage, AI focus, compensation, and filtering rules.
 
 ---
 
@@ -109,7 +74,7 @@ curl -s -X POST "https://api.notion.com/v1/pages" \
   -H "Notion-Version: 2025-09-03" \
   -H "Content-Type: application/json" \
   -d '{
-    "parent": {"database_id": "eaedf5e6-3b8e-4454-bbcf-00f5a72abf23"},
+    "parent": {"database_id": "2b9ff60b-2f4d-8129-8b4c-ce71ced464a6"},
     "properties": {
       "Role": {"title": [{"text": {"content": "<ROLE>"}}]},
       "Company": {"rich_text": [{"text": {"content": "<COMPANY>"}}]},
@@ -131,7 +96,7 @@ Found X new opportunities:
 • [Role] at [Company] — [Fit]
 ...
 
-Added to Notion pipeline. Review at: https://notion.so/eaedf5e63b8e4454bbcf00f5a72abf23
+Added to Notion pipeline. Review at: https://notion.so/2b9ff60b2f4d81298b4cce71ced464a6
 ```
 
 ---
