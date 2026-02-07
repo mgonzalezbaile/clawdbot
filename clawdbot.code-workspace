@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": ".",
+    },
+    {
+      "path": "../../backlog/ongoing-projects",
+    },
+    {
+      "path": "../../../.openclaw/workspace-orbit",
+    },
+    {
+      "path": "../../../.openclaw/workspace-hunter",
+    },
+  ],
+  "settings": {},
+}
